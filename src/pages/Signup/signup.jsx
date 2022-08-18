@@ -109,7 +109,7 @@ const Signup = () => {
                     </Grid>
                     <TextField label="Name" sx={{mt: 2}} values={values.name} name="name" onChange={handleChange} fullWidth InputLabelProps={{ shrink: true }}/>
                     <TextField label="Email" sx={{mt: 2}} values={values.email} name="email" type="email" onChange={handleChange} fullWidth InputLabelProps={{ shrink: true }}/>
-                    <TextField label="Password" sx={{mt: 2}} values={values.password} name="password" onChange={handleChange} fullWidth InputLabelProps={{ shrink: true }} InputProps={{endAdornment:
+                    <TextField label="Password" sx={{mt: 2}} values={values.password} type={values.showPassword ? "text" : "password"} name="password" onChange={handleChange} fullWidth InputLabelProps={{ shrink: true }} InputProps={{endAdornment:
                             <IconButton
                                 aria-label="toggle password visibility"
                                 onClick={handleClickShowPassword}
@@ -119,7 +119,7 @@ const Signup = () => {
                                 {values.showPassword ? <VisibilityOff/> : <Visibility/>}
                             </IconButton>
                     }}/>
-                    <TextField label="Re-Enter Password" sx={{mt: 2}} values={values.confirmPassword} name="confirmPassword" onChange={handleChange} fullWidth InputLabelProps={{ shrink: true }} InputProps={{endAdornment:
+                    <TextField label="Re-Enter Password" sx={{mt: 2}} type={values.showPassword ? "text" : "password"} values={values.confirmPassword} name="confirmPassword" onChange={handleChange} fullWidth InputLabelProps={{ shrink: true }} InputProps={{endAdornment:
                             <IconButton
                                 aria-label="toggle password visibility"
                                 onClick={handleClickShowPassword}
