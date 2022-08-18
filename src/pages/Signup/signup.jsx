@@ -58,7 +58,7 @@ const Signup = () => {
     const retrieveNewUser = (userLogin) => {
         getUsers().then((response) => {
             let userInfo = response.data.find(users => users.email === userLogin.email);
-            navigate(`/profile/${userInfo}`);
+            navigate(`/profile/${userInfo._id}`);
             dispatch(authActions.actions.login(userInfo._id));
             dispatch(userActions.actions.setUserType(userInfo.userType));
         });
