@@ -31,7 +31,7 @@ const EditIssue = () => {
                 })
                 setSelectedFilesArray(res.data.issueImage);
                 const imageArray = res.data.issueImage.map((image) => {
-                    return `http://localhost:5000/${image.filePath}`;
+                    return `https://smart-rentals-server.herokuapp.com/${image.filePath}`;
                 });
                 setSelectedFiles(imageArray);
             })

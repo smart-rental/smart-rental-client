@@ -58,7 +58,7 @@ const EditProperty = () => {
             });
             setSelectedFilesArray(images);
             const imageArray = images.map((image) => {
-                return `http://localhost:5000/${image.filePath}`;
+                return `http://https://smart-rentals-server.herokuapp.com/${image.filePath}`;
             });
             setSelectedFiles(imageArray);
             setPets(pets);
