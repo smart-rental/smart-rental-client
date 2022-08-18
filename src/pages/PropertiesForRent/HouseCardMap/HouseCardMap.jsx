@@ -62,6 +62,16 @@ const HouseCardMap = () => {
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
 
+    function formatPhoneNumber() {
+        const cleaned = ("" + phoneNumber).replace(/\D/g, "");
+        const match = cleaned.match(/^(1|)?(\d{3})(\d{3})(\d{4})$/);
+        if (match) {
+            const intlCode = (match[1] ? "+1 " : "");
+            return [intlCode, '(', match[2], ') ', match[3], '-', match[4]].join('');
+        }
+        return null;
+    }
+
     const petToString = () => {
         return pets ? "Allowed" : "Not Allowed";
     };
@@ -223,7 +233,7 @@ const HouseCardMap = () => {
                 LandLord: {landlordName}
             </Typography>
             <Typography sx={{ fontSize: 18, fontWeight: "medium" }}>
-                Phone Number: {phoneNumber}
+                Phone Number: {formatPhoneNumber()}
             </Typography>
             <Typography sx={{ fontSize: 18, fontWeight: "medium" }}>
                 Email: {email}
