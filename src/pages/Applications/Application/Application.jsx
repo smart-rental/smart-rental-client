@@ -1,5 +1,6 @@
 import React from "react";
 import { Button, Card, CardActions, CardContent, Divider, Stack, Typography } from "@mui/material";
+import Box from "@mui/material/Box";
 
 const Application = ({application: {_id, animals, dob, email, monthlyIncome, name, occupants, occupation, phoneNumber, message, timeStamp}, resolveApplication}) => {
     
@@ -40,7 +41,7 @@ const Application = ({application: {_id, animals, dob, email, monthlyIncome, nam
                 </Stack>
 
                 <Typography variant="h6" component="h2" sx={{mt: 1}}>
-                     Information
+                     Applicant Information
                 </Typography>
                 <Divider/>
                 <Stack direction="row" alignItems="center" gap={1}>
@@ -79,7 +80,7 @@ const Application = ({application: {_id, animals, dob, email, monthlyIncome, nam
                     </Typography>
                 </Stack>
             </CardContent>
-            <CardActions>
+            <CardActions sx={{ display: "flex", alignItems: "center", justifyContent: "center"}}>
                 <Button size="large" variant="contained" onClick={() => {
                     resolveApplication(_id);
                 }}>
