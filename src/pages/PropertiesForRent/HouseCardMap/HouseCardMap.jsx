@@ -73,6 +73,7 @@ const HouseCardMap = () => {
         return `${month}/${day}/${year}`;
     };
     useEffect(() => {
+        let isMounted = true;
         async function retrieveData() {
             const property = await getPropertyByID(propertyId);
             setProperty(property.data);
@@ -83,7 +84,7 @@ const HouseCardMap = () => {
 
         retrieveData();
         return () => {
-            console.log("clean up");
+            isMounted = false;
         };
     }, [ownerId, propertyId]);
 

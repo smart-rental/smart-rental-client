@@ -1,19 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { getAllProperties } from "../../api";
 import HouseCard from "./HouseCard/HouseCard";
-import { Grid, Pagination } from "@mui/material";
+import { Backdrop, CircularProgress, Grid, Pagination } from "@mui/material";
 import Error from "../../components/Error/Error";
 
 const Houses = () => {
     const [properties, setProperties] = useState([]);
     const [numberOfPages, setNumberOfPages] = useState(0);
     const [pageNumber, setPageNumber] = useState(0);
+    const [loading, setLoading] = useState(true);
     const pages = new Array(numberOfPages).fill(null).map((v, i) => i);
     useEffect(() => {
         getAllProperties(pageNumber)
             .then((res) => {
                 setProperties(res.data.property);
                 setNumberOfPages(res.data.totalPages);
+                setLoading(false);
             })
             .catch(() => {
                 return (
@@ -42,9 +44,16 @@ const Houses = () => {
                         </Grid>
                     );
                 }) : ""}
+                {
+                    loading && 
+                        <Backdrop open={loading}>
+                            <CircularProgress color="primary"/>
+                    </Backdrop> 
+                }
                 <Grid item>
-                    <Pagination onChange={handlePageChange} count={pages.length} variant="outlined" color="primary"/>
+                    <Pagination sx={{mb: 4}} onChange={handlePageChange} count={pages.length} variant="outlined" color="primary"/>
                 </Grid>
+                
             </Grid>
         </>
     );

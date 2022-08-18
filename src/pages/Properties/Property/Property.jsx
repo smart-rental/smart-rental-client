@@ -3,15 +3,14 @@ import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
-import PersonIcon from '@mui/icons-material/Person';
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
+import PersonIcon from "@mui/icons-material/Person";
 import Kebab from "../../../components/Kebab/Kebab";
-import DescriptionIcon from '@mui/icons-material/Description';
-import BugReportIcon from '@mui/icons-material/BugReport';
+import DescriptionIcon from "@mui/icons-material/Description";
+import BugReportIcon from "@mui/icons-material/BugReport";
 import { Chip } from "@mui/material";
-import TableBody from "@mui/material/TableBody";
 
 const Property = ({property: { _id, location, built, squareFeet, rent, capacity, parkingStalls, pets, utilities, bed, bath, tenant, rent_payment_status }, landlordId, removeProperty, users}) => {
     const checkOrX = (bool) => {
@@ -26,6 +25,8 @@ const Property = ({property: { _id, location, built, squareFeet, rent, capacity,
                 return (<Chip label={rent_payment_status} sx={{bgcolor: "#ffff33"}}/>)
             case "n/a":
                 return (<Chip label={rent_payment_status}/>)
+            default: 
+                return (<Chip label="error"/>)
         }
     }
 
@@ -72,7 +73,6 @@ const Property = ({property: { _id, location, built, squareFeet, rent, capacity,
     }
 
     return(
-        <TableBody>
             <TableRow
                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
@@ -97,7 +97,6 @@ const Property = ({property: { _id, location, built, squareFeet, rent, capacity,
                     />
                 </TableCell>
             </TableRow>
-        </TableBody>
         
     );
 }

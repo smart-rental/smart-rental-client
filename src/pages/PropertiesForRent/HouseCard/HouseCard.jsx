@@ -55,10 +55,10 @@ const HouseCard = ({propertyInfo: { _id, location, squareFeet, images, rent, cap
                     </Stack>
                 </CardContent>
                 <CardActions>
-                    <Button size="large" variant="contained" onClick={() => {
+                    <Button size="large" sx={{borderRadius: "20px"}} variant="contained" onClick={() => {
                         navigate(`/map/${location}/${_id}`);
                     }}>
-                        <Typography>
+                        <Typography fontFamily="Noto Sans">
                             View Listing
                         </Typography>
                     </Button>
