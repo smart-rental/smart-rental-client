@@ -11,7 +11,7 @@ const LandLordStripeButton = ({stripe_account, setSubmit, ownerId}) => {
             const res = await stripeAccountCreation(ownerId);
             window.location.href = res.data.accountLink.url;
         } catch (e) {
-            console.log(e);
+            await Swal.fire("Error", "Error creating account", "error");
         } finally {
             setSubmit(true);
         }
@@ -23,7 +23,7 @@ const LandLordStripeButton = ({stripe_account, setSubmit, ownerId}) => {
             await stripeAccountDeletion(ownerId);
             await Swal.fire("", "Account Deleted. If you want to continue receiving payments please create another stripe account.", "success");
         } catch (e) {
-            console.log(e);
+            await Swal.fire("Error", "Error Deleting Account", "error");
         } finally {
             setSubmit(true);
         }

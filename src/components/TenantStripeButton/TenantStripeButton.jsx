@@ -14,7 +14,7 @@ const TenantStripeButton = ({stripe_account, setSubmit, ownerId}) => {
             const res = await stripeAutoPaymentCreation(ownerId);
             window.location.href = res.data.checkoutSession.url;
         } catch (e) {
-            console.log(e);
+            await Swal.fire("Error", "Error creating account", "error");
         } finally {
             setSubmit(true);
         }
@@ -26,7 +26,7 @@ const TenantStripeButton = ({stripe_account, setSubmit, ownerId}) => {
             await stripeAutoPaymentDeletion(ownerId);
             await Swal.fire("", "Account Deleted. If you want to continue receiving payments please create another stripe account.", "success");
         } catch (e) {
-            console.log(e);
+            await Swal.fire("Error", "Error Deleting Account", "error");
         } finally {
             setSubmit(true);
         }
