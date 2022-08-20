@@ -4,7 +4,7 @@ import {
     Avatar,
     TextField,
     Button,
-    Typography, Checkbox, FormControlLabel, Divider, Stack, InputAdornment
+    Typography, Checkbox, FormControlLabel, Divider, Stack, InputAdornment, Backdrop, CircularProgress
 } from "@mui/material";
 import { useParams } from "react-router-dom";
 import HouseIcon from "@mui/icons-material/House";
@@ -36,6 +36,7 @@ const AddProperty = () => {
     const [amenities, setAmenities] = useState([]);
     const [selectedFiles, setSelectedFiles] = useState([]);
     const [selectedFilesArray, setSelectedFilesArray] = useState([]);
+    const [loading, setLoading] = useState(false);
     const [{
         location,
         built,
@@ -97,8 +98,22 @@ const AddProperty = () => {
         setValues({ ...initialState });
     };
 
+    const backdrop = () => {
+        return (
+            <>
+                {
+                    loading &&
+                    <Backdrop open={loading} sx={{zIndex: 1}}>
+                        <CircularProgress color="primary"/>
+                    </Backdrop>
+                }
+            </>
+        )
+    }
+
     const createProperty = (e) => {
         e.preventDefault();
+        setLoading(true);
         const propertyData = new FormData();
         for (const image of selectedFilesArray) {
             propertyData.append("images", image);
@@ -121,6 +136,7 @@ const AddProperty = () => {
         propertyData.append("ownerId", id);
         addProperty(id, propertyData)
             .then(() => {
+                setLoading(false);
                 Swal.fire("Congratulations", "Your property has been added", "success").then(reset);
             })
             .catch((e) => {
@@ -131,6 +147,7 @@ const AddProperty = () => {
 
     return (
         <form onSubmit={createProperty}>
+            {backdrop()}
             <Container>
                 <Grid align="center" style={{ marginTop: "20px" }}>
                     <Avatar style={avatarStyle}><HouseIcon/></Avatar>

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import {
-    Avatar,
+    Avatar, Backdrop,
     Button,
-    Checkbox, Divider,
+    Checkbox, CircularProgress, Divider,
     FormControlLabel,
     Grid, InputAdornment, Stack,
     TextField,
@@ -39,6 +39,7 @@ const EditProperty = () => {
     const [selectedFiles, setSelectedFiles] = useState([]);
     const [selectedFilesArray, setSelectedFilesArray] = useState([]);
     const [amenities, setAmenities] = useState([]);
+    const [loading, setLoading] = useState(false);
     const [indexToDelete, setIndexToDelete] = useState([]);
     const [{ location, built, squareFeet, rent, capacity, parkingStalls, bed, bath, description }, setValues] = useState(initialState);
 
@@ -58,7 +59,7 @@ const EditProperty = () => {
             });
             setSelectedFilesArray(images);
             const imageArray = images.map((image) => {
-                return `http://https://smart-rentals-server.herokuapp.com/${image.filePath}`;
+                return image.secure_url;
             });
             setSelectedFiles(imageArray);
             setPets(pets);
@@ -110,12 +111,26 @@ const EditProperty = () => {
         margin: "8px 0"
     };
 
+    const backdrop = () => {
+        return (
+            <>
+                {
+                    loading &&
+                    <Backdrop open={loading} sx={{zIndex: 1}}>
+                        <CircularProgress color="primary"/>
+                    </Backdrop>
+                }
+            </>
+        )
+    }
+
     const updateProperty = (e) => {
         e.preventDefault();
+        setLoading(true);
         const propertyData = new FormData();
         for (const index of indexToDelete) {
             if (typeof index === "object") {
-                propertyData.append("indexToDelete", index.filePath);
+                propertyData.append("indexToDelete", index.public_id);
             }
         }
         for (const image of selectedFilesArray) {
@@ -135,8 +150,8 @@ const EditProperty = () => {
         propertyData.append("description", description);
         propertyData.append("ownerId", ownerId);
         editProperty(ownerId, propertyId, propertyData)
-            .then((r) => {
-                console.log(r);
+            .then(() => {
+                setLoading(false);
                 Swal.fire("Congratulations", "Your property has been updated", "success");
                 navigate(`/landlord/${ownerId}`);
             })
@@ -147,6 +162,7 @@ const EditProperty = () => {
     };
     return (
         <form onSubmit={updateProperty}>
+            {backdrop()}
             <Container>
                 <Grid>
                     <Grid align="center" style={{ marginTop: "20px" }}>

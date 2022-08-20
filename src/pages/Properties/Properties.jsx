@@ -48,8 +48,10 @@ const Properties = () => {
     }, [landlordId]);
 
     const removeProperty = (propertyId) => {
+        setLoading(true);
         deleteProperty(propertyId)
             .then(() => {
+                setLoading(false);
                 setProperties(properties.filter(property => property._id !== propertyId));
                 Swal.fire("Property Deleted", `The property has been deleted`, "success");
             })
@@ -62,7 +64,7 @@ const Properties = () => {
     return (
         <Container maxWidth="125rem">
             {loading ?
-                <Backdrop open={loading}>
+                <Backdrop open={loading} sx={{zIndex: 1}}>
                     <CircularProgress color="primary"/>
                 </Backdrop>
                 :

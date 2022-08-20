@@ -22,6 +22,7 @@ const AmenitiesAutoComplete = ({value, setAmenities}) => {
         <Autocomplete
             multiple
             autoHighlight
+            disableCloseOnSelect
             sx={{mt: 2, mb: 2}}
             value={value}
             inputValue={inputValue}
