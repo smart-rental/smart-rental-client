@@ -37,60 +37,59 @@ const ResponsiveAppBar = () => {
     }
     
     function displayLogIn() { 
-        if (userType === LANDLORD) { 
-            return (
-                <Typography
-                    variant="h6"
-                    noWrap
-                    sx={{
-                        mr: 2,
-                        display: { xs: "none", md: "flex" },
-                        fontFamily: "Noto Sans",
-                        fontWeight: 700,
-                        letterSpacing: ".3rem",
-                        color: "inherit",
-                        textDecoration: "none"
-                    }}
-                >
-                    <Link to="/landlord" style={classes.link}>Smart Rentals</Link>
-                </Typography>
-            )
-        } else if (userType === TENANT) {
-            return (
-                <Typography
-                    variant="h6"
-                    noWrap
-                    sx={{
-                        mr: 2,
-                        display: { xs: "none", md: "flex" },
-                        fontFamily: "Noto Sans",
-                        fontWeight: 700,
-                        letterSpacing: ".3rem",
-                        color: "inherit",
-                        textDecoration: "none"
-                    }}
-                >
-                    <Link to="/" style={classes.link}>Smart renter Rentals</Link>
-                </Typography>
-            )
-        } else {
-            return (
-                <Typography
-                    variant="h6"
-                    noWrap
-                    sx={{
-                        mr: 2,
-                        display: { xs: "none", md: "flex" },
-                        fontFamily: "Noto Sans",
-                        fontWeight: 700,
-                        letterSpacing: ".3rem",
-                        color: "inherit",
-                        textDecoration: "none"
-                    }}
-                >
-                    <Link to="/" style={classes.link}>Smart Rentals</Link>
-                </Typography>
-            )
+        switch (userType) {
+            case LANDLORD:
+                return (
+                    <Typography
+                        variant="h6"
+                        noWrap
+                        sx={{
+                            mr: 2,
+                            display: { xs: "none", md: "flex" },
+                            fontFamily: "Noto Sans",
+                            fontWeight: 700,
+                            letterSpacing: ".3rem",
+                            color: "inherit",
+                            textDecoration: "none"
+                        }}
+                    >
+                        Smart Rentals
+                    </Typography>);
+            case TENANT:
+                return (
+                    <Typography
+                        variant="h6"
+                        noWrap
+                        sx={{
+                            mr: 2,
+                            display: { xs: "none", md: "flex" },
+                            fontFamily: "Noto Sans",
+                            fontWeight: 700,
+                            letterSpacing: ".3rem",
+                            color: "inherit",
+                            textDecoration: "none"
+                        }}
+                    >
+                        Smart Rentals
+                    </Typography>);
+            default:
+                return (
+                    <Typography
+                        variant="h6"
+                        noWrap
+                        sx={{
+                            mr: 2,
+                            display: { xs: "none", md: "flex" },
+                            fontFamily: "Noto Sans",
+                            fontWeight: 700,
+                            letterSpacing: ".3rem",
+                            color: "inherit",
+                            textDecoration: "none"
+                        }}
+                    >
+                        <Link to="/" style={classes.link}>Smart Rentals</Link>
+                    </Typography>
+                )
         }
     }
 
@@ -127,87 +126,112 @@ const ResponsiveAppBar = () => {
                             onClose={handleCloseNavMenu}
                             style={classes.menu}
                         >
-                            <MenuItem>
-                                <Typography textAlign="center"><Link style={classes.menuItem} to="/landlord">Manage
-                                    Properties</Link></Typography>
-                            </MenuItem>
-                            <MenuItem>
-                                <Typography textAlign="center"><Link style={classes.menuItem} to="/addProperty">Add
-                                    Property</Link></Typography>
-                            </MenuItem>
+                            {userType == null && 
+                                <>
+                                    <MenuItem>
+                                        <Typography textAlign="center"><Link style={classes.menuItem} to="/">Home Page</Link></Typography>
+                                    </MenuItem>
+                                    <MenuItem>
+                                        <Typography textAlign="center"><Link style={classes.menuItem} to="/house">View Available
+                                            Houses</Link></Typography>
+                                    </MenuItem>
+                                </>
+                            }
+                            {userType === LANDLORD &&
+                                <>
+                                    <MenuItem>
+                                        <Typography textAlign="center"><Link style={classes.menuItem} to={`/landlord/${isLoggedIn}`}>Manage Properties</Link></Typography>
+                                    </MenuItem>
+                                    <MenuItem>
+                                        <Typography textAlign="center"><Link style={classes.menuItem} to={`/addProperty/${isLoggedIn}`}>Add Property</Link></Typography>
+                                    </MenuItem>
+                                    <MenuItem>
+                                        <Typography textAlign="center"><Link style={classes.menuItem} to={`/profile/${isLoggedIn}`}>Profile</Link></Typography>
+                                    </MenuItem>
+                                </>}
+                            {userType === TENANT && 
+                                <>
+                                    <MenuItem>
+                                        <Typography textAlign="center"><Link style={classes.menuItem} to="/house">View Available Houses</Link></Typography>
+                                    </MenuItem>
+                                    <MenuItem>
+                                        <Typography textAlign="center"><Link style={classes.menuItem} to="/house">View Available Houses</Link></Typography>
+                                    </MenuItem>
+                                    <MenuItem>
+                                        <Typography textAlign="center"><Link style={classes.menuItem} to="/house">View Available Houses</Link></Typography>
+                                    </MenuItem>
+                                </>
+                            }
                         </Menu>
                     </Box>
-
-                    {/*Mobile Version*/}
-                    <Typography
-                        variant="h5"
-                        noWrap
-                        sx={{
-                            mr: 2,
-                            display: { xs: "flex", md: "none" },
-                            flexGrow: 1,
-                            fontFamily: "Noto Sans",
-                            fontWeight: 700,
-                            letterSpacing: ".3rem",
-                            color: "inherit",
-                            textDecoration: "none"
-                        }}
-                    >
-                        <Link to="/" style={classes.link}>Rental</Link>
-                    </Typography>
                     <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-                        {isLoggedIn == null ?
-                            <Link style={classes.link} to="/house">
-                                <Button style={classes.mobileButton} size="large">
-                                    <Typography textAlign="center" style={{ color: "white" }}
-                                                fontFamily="Noto Sans">View Available Houses</Typography>
-                                </Button>
-                            </Link> : ""}
-                        {isLoggedIn != null && userType === LANDLORD ? <Link style={classes.link} to={`/landlord/${isLoggedIn}`}>
-                            <Button style={classes.mobileButton} size="large">
-                                <Typography textAlign="center" style={{ color: "white" }} fontFamily="Noto Sans">Manage
-                                    Properties</Typography>
-                            </Button>
-                        </Link> : ""}
-                        {isLoggedIn != null && userType === LANDLORD ? <Link style={classes.link} to={`/addProperty/${isLoggedIn}`}>
-                            <Button style={classes.mobileButton} size="large">
-                                <Typography textAlign="center" style={{ color: "white" }} fontFamily="Noto Sans">Add
-                                    Property</Typography>
-                            </Button>
-                        </Link> : ""}
-                        {isLoggedIn != null && userType === TENANT ? <Link style={classes.link} to={`/addIssue/${isLoggedIn}`}>
-                            <Button style={classes.mobileButton} size="large">
-                                <Typography textAlign="center" style={{ color: "white" }} fontFamily="Noto Sans">Add Issue</Typography>
-                            </Button>
-                        </Link> : ""}
-                        {isLoggedIn != null && userType === TENANT ? <Link style={classes.link} to={`/issue`}>
-                            <Button style={classes.mobileButton} size="large">
-                                <Typography textAlign="center" style={{ color: "white" }} fontFamily="Noto Sans">Issues</Typography>
-                            </Button>
-                        </Link> : ""}
-                        {isLoggedIn != null ? <Link style={classes.link} to={`/profile/${isLoggedIn}`}>
-                            <Button style={classes.mobileButton} size="large">
-                                <Typography textAlign="center" style={{ color: "white" }} fontFamily="Noto Sans">Profile</Typography>
-                            </Button>
-                        </Link> : ""}
+                        {isLoggedIn == null &&
+                            <>
+                                <Link style={classes.link} to="/house">
+                                    <Button style={classes.mobileButton} size="large">
+                                        <Typography textAlign="center" style={{ color: "white" }}
+                                                    fontFamily="Noto Sans">View Available Houses</Typography>
+                                    </Button>
+                                </Link>
+                            </>
+                            }
+                        {(isLoggedIn != null && userType === LANDLORD) && 
+                            <>
+                                <Link style={classes.link} to={`/landlord/${isLoggedIn}`}>
+                                    <Button style={classes.mobileButton} size="large">
+                                        <Typography textAlign="center" style={{ color: "white" }} fontFamily="Noto Sans">Manage
+                                            Properties</Typography>
+                                    </Button>
+                                </Link>
+                                <Link style={classes.link} to={`/addProperty/${isLoggedIn}`}>
+                                    <Button style={classes.mobileButton} size="large">
+                                        <Typography textAlign="center" style={{ color: "white" }} fontFamily="Noto Sans">Add
+                                            Property</Typography>
+                                    </Button>
+                                </Link>
+                            </>
+                        }
+                        {(isLoggedIn != null && userType === TENANT) && 
+                            <>
+                                <Link style={classes.link} to={`/addIssue/${isLoggedIn}`}>
+                                    <Button style={classes.mobileButton} size="large">
+                                        <Typography textAlign="center" style={{ color: "white" }} fontFamily="Noto Sans">Add Issue</Typography>
+                                    </Button>
+                                </Link>
+                                <Link style={classes.link} to={`/issue`}>
+                                    <Button style={classes.mobileButton} size="large">
+                                        <Typography textAlign="center" style={{ color: "white" }} fontFamily="Noto Sans">Issues</Typography>
+                                    </Button>
+                                </Link>
+                            </>
+                            }
+                        {isLoggedIn != null && 
+                            <>
+                                <Link style={classes.link} to={`/profile/${isLoggedIn}`}>
+                                    <Button style={classes.mobileButton} size="large">
+                                        <Typography textAlign="center" style={{ color: "white" }} fontFamily="Noto Sans">Profile</Typography>
+                                    </Button>
+                                </Link>
+                            </>
+                        }
                     </Box>
 
                     <Box sx={{ flexGrow: 0 }}>
-                        {isLoggedIn == null ? <Link style={classes.link} to="/login">
+                        {isLoggedIn == null && <Link style={classes.link} to="/login">
                             <Button variant="contained" color="secondary" style={classes.mobileButton} size="large">
                                 <Typography textAlign="center" style={classes.mobileTypography}>Login</Typography>
                             </Button>
-                        </Link> : ""}
-                        {isLoggedIn == null ? <Link style={classes.link} to="/signup">
+                        </Link>}
+                        {isLoggedIn == null && <Link style={classes.link} to="/signup">
                             <Button variant="contained" size="large">
                                 <Typography textAlign="center" fontFamily="Noto Sans">Sign up</Typography>
                             </Button>
-                        </Link> : ""}
-                        {isLoggedIn != null ? <Link style={classes.link} to="/">
+                        </Link>}
+                        {isLoggedIn != null && <Link style={classes.link} to="/">
                             <Button variant="contained" size="large" onClick={logOut}>
                                 <Typography textAlign="center" fontFamily="Noto Sans">Logout</Typography>
                             </Button>
-                        </Link> : ""}
+                        </Link>}
                     </Box>
                 </Toolbar>
             </Container>
