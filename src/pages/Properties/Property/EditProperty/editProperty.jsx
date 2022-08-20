@@ -168,8 +168,6 @@ const EditProperty = () => {
                     <Grid align="center" style={{ marginTop: "20px" }}>
                         <Avatar style={avatarStyle}><HouseIcon/></Avatar>
                         <Typography variant="h5" fontFamily="Noto Sans">Edit Property</Typography>
-                        <Typography variant="h5" fontFamily="Noto Sans">Properties that have not been rented out will be
-                            displayed for renters to see</Typography>
                     </Grid>
                     <Typography variant="h6" component="h2" sx={{mt: 2}}>
                         Property Information

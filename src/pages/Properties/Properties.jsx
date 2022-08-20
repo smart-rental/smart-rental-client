@@ -16,7 +16,7 @@ import TableBody from "@mui/material/TableBody";
 
 const Properties = () => {
     const [properties, setProperties] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     const [users, setUsers] = useState([]);
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -29,6 +29,7 @@ const Properties = () => {
     };
     const landlordId = useSelector((state) => state.auth.isLoggedIn);
     useEffect(() => {
+        setLoading(true);
         let isMounted = true;
         const property = async () => {
             try {
@@ -61,13 +62,19 @@ const Properties = () => {
             });
     };
 
+    const backdrop = () => { 
+        return (
+            <>
+                {loading &&
+                    <Backdrop open={loading} sx={{zIndex: 1}}>
+                        <CircularProgress color="primary"/>
+                    </Backdrop>}
+            </>
+        );
+    }
     return (
         <Container maxWidth="125rem">
-            {loading ?
-                <Backdrop open={loading} sx={{zIndex: 1}}>
-                    <CircularProgress color="primary"/>
-                </Backdrop>
-                :
+            {backdrop()}
                 <>
                     <TableContainer>
                         <Table aria-label="simple table">
@@ -116,7 +123,6 @@ const Properties = () => {
                         </Table>
                     </TableContainer>
                 </>
-            }
         </Container>
     );
 };

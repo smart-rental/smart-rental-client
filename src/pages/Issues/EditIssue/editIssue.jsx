@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Avatar, Button, Grid, TextField, Typography } from "@mui/material";
+import { Avatar, Backdrop, Button, CircularProgress, Grid, TextField, Typography } from "@mui/material";
 import MenuItem from "@mui/material/MenuItem";
 import FeedbackIcon from '@mui/icons-material/Feedback';
 import { retrieveIssue, updateIssue } from "../../../api";
@@ -13,25 +13,28 @@ const EditIssue = () => {
     const { issueId } = useParams();
     let initialState = {
         issueType: "",
-        issueImage: "",
-        issueDescription: ""
+        issueDescription: "",
+        status: "",
+        propertyId: ""
     }
-    const [{issueType, issueDescription}, setValues] = useState(initialState);
+    const [{issueType, issueDescription, status, propertyId}, setValues] = useState(initialState);
     const [selectedFiles, setSelectedFiles] = useState([]);
     const [selectedFilesArray, setSelectedFilesArray] = useState([]);
     const [indexToDelete, setIndexToDelete] = useState([]);
-    const [res, setRes] = useState("");
+    const [loading, setLoading] = useState(false);
     useEffect(() => {
         retrieveIssue(issueId)
             .then((res) => {
-                setRes(res.data);
+                const { issueType, issueDescription, issueImage, status, propertyId } = res.data
                 setValues({
-                    issueType: res.data.issueType,
-                    issueDescription: res.data.issueDescription
+                    issueType,
+                    issueDescription,
+                    status,
+                    propertyId
                 })
-                setSelectedFilesArray(res.data.issueImage);
-                const imageArray = res.data.issueImage.map((image) => {
-                    return `https://smart-rentals-server.herokuapp.com/${image.filePath}`;
+                setSelectedFilesArray(issueImage);
+                const imageArray = issueImage.map((image) => {
+                    return image.secure_url;
                 });
                 setSelectedFiles(imageArray);
             })
@@ -63,16 +66,29 @@ const EditIssue = () => {
         setValues((prevState) => ({ ...prevState, [name]: value}));
     }
 
+    const backdrop = () => {
+        return (
+            <>
+                {
+                    loading &&
+                    <Backdrop open={loading} sx={{zIndex: 1}}>
+                        <CircularProgress color="primary"/>
+                    </Backdrop>
+                }
+            </>
+        )
+    }
+    
     const changeIssue = (e) => {
         e.preventDefault();
-        const { status, propertyId } = res;
+        setLoading(true);
         const issueData = new FormData();
         for (const image of selectedFilesArray) {
             issueData.append("issueImage", image);
         }
         for (const index of indexToDelete) {
             if (typeof index === "object") {
-                issueData.append("indexToDelete", index.filePath);
+                issueData.append("indexToDelete", index.public_id);
             }
         }
         issueData.append("issueType", issueType);
@@ -81,6 +97,7 @@ const EditIssue = () => {
         issueData.append("propertyId", propertyId);
         updateIssue(issueId, issueData)
             .then(() => {
+                setLoading(false);
                 Swal.fire("Congratulations", "Your issue has been successfully edited", "success")
                     .then(() => {
                         window.history.back()
@@ -98,6 +115,7 @@ const EditIssue = () => {
 
     return (
         <form onSubmit={changeIssue}>
+            {backdrop()}
             <Container>
                     <Grid align="center" style={{marginTop: "20px"}}>
                         <Avatar style={avatarStyle}><FeedbackIcon/></Avatar>
@@ -130,6 +148,8 @@ const EditIssue = () => {
                         rows={8}
                         fullWidth
                         multiline
+                        label="Issue Description"
+                        sx={{mt: 1}}
                         onChange={handleChange}
                         name="issueDescription"
                         value={issueDescription}
@@ -149,7 +169,7 @@ const EditIssue = () => {
                         setIndexToDelete={setIndexToDelete}
                     />
                     <br/>
-                    <Button type="submit" color="primary" variant="contained" >
+                    <Button type="submit" color="primary" variant="contained" fullWidth>
                         <Typography fontFamily="Noto Sans">Submit</Typography>
                     </Button>
             </Container>

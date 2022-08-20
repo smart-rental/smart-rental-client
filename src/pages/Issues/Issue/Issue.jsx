@@ -42,7 +42,7 @@ const Issue = ({
                             Edit
                         </Typography>
                     </Button>
-                    <Button size="small" onClick={() => removeIssue(_id)}>
+                    <Button size="small" onClick={() => {removeIssue(_id)}}>
                         <Typography variant="contained">
                             Delete
                         </Typography>

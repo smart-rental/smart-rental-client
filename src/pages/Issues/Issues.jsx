@@ -5,6 +5,7 @@ import { deleteIssue, retrieveIssueFromProperty, retrieveIssues, updateIssue } f
 import { useNavigate, useParams } from "react-router-dom";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import Swal from "sweetalert2";
+import { Backdrop, CircularProgress } from "@mui/material";
 
 const Issues = () => {
     const navigate = useNavigate();
@@ -13,6 +14,7 @@ const Issues = () => {
     const [columns, setColumns] = useState([]);
     const [issues, setIssues] = useState([]);
     const [status, setStatus] = useState([]);
+    const [loading, setLoading] = useState(false);
     const params = useParams();
     const requestedId = useId();
     const inProgressId = useId();
@@ -60,11 +62,13 @@ const Issues = () => {
     };
 
     const removeIssue = (issueId) => {
+        setLoading(true);
         deleteIssue(isLoggedIn, issueId)
             .then((r) => {
+                setLoading(false);
+                Swal.fire("Issue Deleted", `The issue has been deleted`, "success");
                 setIssues(issues.filter(issue => issue._id !== issueId));
                 setStatus(r.data)
-                Swal.fire("Issue Deleted", `The issue has been deleted`, "success");
             })
             .catch((e) => {
                 console.log(e);
@@ -109,9 +113,23 @@ const Issues = () => {
         }
     };
 
+    const backdrop = () => {
+        return (
+            <>
+                {
+                    loading &&
+                    <Backdrop open={loading} sx={{zIndex: 1}}>
+                        <CircularProgress color="primary"/>
+                    </Backdrop>
+                }
+            </>
+        )
+    }
+
     //Kanban Board Layout
     return (
     <div style={{ display: "flex", justifyContent: "center", height: "100%" }}>
+            {backdrop()}
             <DragDropContext
                 onDragEnd={result => onDragEnd(result, columns, setColumns)}
             >
