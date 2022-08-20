@@ -16,7 +16,7 @@ const Gallery = ({images, width}) => {
     };
 
     const imageLinks = images.map((image) => {
-        return `http://localhost:5000/${image.filePath}`;
+        return image.secure_url;
     });
 
     return (
