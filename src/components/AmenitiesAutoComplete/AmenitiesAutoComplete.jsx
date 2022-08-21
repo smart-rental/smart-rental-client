@@ -36,7 +36,7 @@ const AmenitiesAutoComplete = ({value, setAmenities}) => {
             isOptionEqualToValue={(option, value) => option.amenities === value.amenities}
             filterSelectedOptions
             renderInput={(params) => (
-                <TextField {...params} name="amenities" InputLabelProps={{ shrink: true }}/>
+                <TextField label="Amenities" {...params} name="amenities" InputLabelProps={{ shrink: true }}/>
             )}/>
             
     );

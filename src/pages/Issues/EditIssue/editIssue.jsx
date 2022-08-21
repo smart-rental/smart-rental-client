@@ -19,8 +19,7 @@ const EditIssue = () => {
     }
     const [{issueType, issueDescription, status, propertyId}, setValues] = useState(initialState);
     const [selectedFiles, setSelectedFiles] = useState([]);
-    const [selectedFilesArray, setSelectedFilesArray] = useState([]);
-    const [indexToDelete, setIndexToDelete] = useState([]);
+    const [imagesToDelete, setImagesToDelete] = useState([]);
     const [loading, setLoading] = useState(false);
     useEffect(() => {
         retrieveIssue(issueId)
@@ -32,11 +31,7 @@ const EditIssue = () => {
                     status,
                     propertyId
                 })
-                setSelectedFilesArray(issueImage);
-                const imageArray = issueImage.map((image) => {
-                    return image.secure_url;
-                });
-                setSelectedFiles(imageArray);
+                setSelectedFiles(issueImage);
             })
             .catch((e) => {
                 console.log(e);
@@ -52,13 +47,18 @@ const EditIssue = () => {
     };
 
     const handleFileChange = (event) => {
-        const selectedFiles = event.target.files;
-        const selectedFilesArray = Array.from(selectedFiles);
-        setSelectedFilesArray(prevState => prevState.concat(selectedFilesArray));
-        const imageArray = selectedFilesArray.map((image) => {
-            return URL.createObjectURL(image);
-        });
-        setSelectedFiles(prevState => prevState.concat(imageArray));
+        const filesGiven = event.target.files;
+        for (const file of filesGiven) {
+            previewFile(file);
+        }
+    };
+
+    const previewFile = (file) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onloadend = () => {
+            setSelectedFiles(prev => [...prev, reader.result]);
+        }
     }
 
     const handleChange = (event) => {
@@ -82,19 +82,14 @@ const EditIssue = () => {
     const changeIssue = (e) => {
         e.preventDefault();
         setLoading(true);
-        const issueData = new FormData();
-        for (const image of selectedFilesArray) {
-            issueData.append("issueImage", image);
-        }
-        for (const index of indexToDelete) {
-            if (typeof index === "object") {
-                issueData.append("indexToDelete", index.public_id);
-            }
-        }
-        issueData.append("issueType", issueType);
-        issueData.append("issueDescription", issueDescription);
-        issueData.append("status", status);
-        issueData.append("propertyId", propertyId);
+        const issueData = { 
+            issueImage: selectedFiles,
+            imagesToDelete,
+            issueType,
+            issueDescription,
+            status,
+            propertyId
+        };
         updateIssue(issueId, issueData)
             .then(() => {
                 setLoading(false);
@@ -104,6 +99,7 @@ const EditIssue = () => {
                     });
             })
             .catch((e) => {
+                setLoading(false);
                 if (e.response.status === 404) {
                     Swal.fire("Error", "You have not been added to a property. <br/> If this is a mistake please contact your landlord to add you to their list of properties", "error");
                 } else {
@@ -154,6 +150,7 @@ const EditIssue = () => {
                         name="issueDescription"
                         value={issueDescription}
                         placeholder="Brief description of your issue (optional)"
+                        InputLabelProps={{ shrink: true }}
                     />
                     <Button variant="contained" style={btnStyle} endIcon={<FileUpload/>} component="label">
                         <Typography variant="contained">
@@ -163,10 +160,9 @@ const EditIssue = () => {
                     </Button>
                     <ListImage
                         selectedFiles={selectedFiles}
-                        selectedFilesArray={selectedFilesArray}
                         setSelectedFiles={setSelectedFiles}
-                        setSelectedFilesArray={setSelectedFilesArray}
-                        setIndexToDelete={setIndexToDelete}
+                        imagesToDelete={imagesToDelete}
+                        setImagesToDelete={setImagesToDelete}
                     />
                     <br/>
                     <Button type="submit" color="primary" variant="contained" fullWidth>

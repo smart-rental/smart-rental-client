@@ -37,10 +37,9 @@ const EditProperty = () => {
     const [pets, setPets] = React.useState("");
     const [post, setPost] = React.useState(false);
     const [selectedFiles, setSelectedFiles] = useState([]);
-    const [selectedFilesArray, setSelectedFilesArray] = useState([]);
     const [amenities, setAmenities] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [indexToDelete, setIndexToDelete] = useState([]);
+    const [imagesToDelete, setImagesToDelete] = useState([]);
     const [{ location, built, squareFeet, rent, capacity, parkingStalls, bed, bath, description }, setValues] = useState(initialState);
 
     useEffect(() => {
@@ -57,11 +56,7 @@ const EditProperty = () => {
                 bath,
                 description
             });
-            setSelectedFilesArray(images);
-            const imageArray = images.map((image) => {
-                return image.secure_url;
-            });
-            setSelectedFiles(imageArray);
+            setSelectedFiles(images);
             setPets(pets);
             setPost(post);
             const amen = amenities.map((a) => { 
@@ -81,14 +76,19 @@ const EditProperty = () => {
     }
 
     const handleFileChange = (event) => {
-        const selectedFiles = event.target.files;
-        const selectedFilesArray = Array.from(selectedFiles);
-        setSelectedFilesArray(prevState => prevState.concat(selectedFilesArray));
-        const imageArray = selectedFilesArray.map((image) => {
-            return URL.createObjectURL(image);
-        });
-        setSelectedFiles(prevState => prevState.concat(imageArray));
+        const filesGiven = event.target.files;
+        for (const file of filesGiven) {
+            previewFile(file);
+        }
     };
+
+    const previewFile = (file) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onloadend = () => {
+            setSelectedFiles(prev => [...prev, reader.result]);
+        }
+    }
     
     const handlePetsChange = (event) => {
         setPets(event.target.value);
@@ -127,31 +127,28 @@ const EditProperty = () => {
     const updateProperty = (e) => {
         e.preventDefault();
         setLoading(true);
-        const propertyData = new FormData();
-        for (const index of indexToDelete) {
-            if (typeof index === "object") {
-                propertyData.append("indexToDelete", index.public_id);
-            }
-        }
-        for (const image of selectedFilesArray) {
-            propertyData.append("images", image);
-        }
+        const amentieArray = [];
         for (const amenity of amenities) {
-            propertyData.append("amenities", amenity.amenities);
+            amentieArray.push(amenity.amenities);
         }
-        propertyData.append("location", location);
-        propertyData.append("built", built.toString());
-        propertyData.append("squareFeet", squareFeet);
-        propertyData.append("rent", rent);
-        propertyData.append("capacity", capacity);
-        propertyData.append("parkingStalls", parkingStalls);
-        propertyData.append("pets", pets);
-        propertyData.append("utilities", utilities);
-        propertyData.append("bed", bed);
-        propertyData.append("bath", bath);
-        propertyData.append("post", post);
-        propertyData.append("description", description);
-        propertyData.append("ownerId", ownerId);
+        const propertyData = {
+            images: selectedFiles,
+            amenities: amentieArray,
+            imagesToDelete,
+            location,
+            built,
+            squareFeet,
+            rent,
+            capacity,
+            parkingStalls,
+            pets,
+            utilities,
+            bed,
+            bath,
+            post,
+            description,
+            ownerId
+        };
         editProperty(ownerId, propertyId, propertyData)
             .then(() => {
                 setLoading(false);
@@ -159,6 +156,7 @@ const EditProperty = () => {
                 navigate(`/landlord/${ownerId}`);
             })
             .catch((e) => {
+                setLoading(false);
                 Swal.fire("Try Again", "Your property has not been added", "error");
                 console.log(e);
             });
@@ -178,19 +176,19 @@ const EditProperty = () => {
                     <Divider/>
                     <PlacesAutoComplete name="location" label="Property Location" handleChange={setValues} style={btnStyle} valueProp={location}/>
                     <Stack direction="row" spacing={3} sx={{mt: 2}}>
-                        <TextField label="Property Built" onChange={handleChange} name="built" type="date" fullWidth value={built} InputLabelProps={{ shrink: true }}/>
-                        <TextField label="Square Feet" type="number" onChange={handleChange} name="squareFeet" fullWidth value={squareFeet} InputLabelProps={{ shrink: true }}/>
-                        <TextField label="Rent Per Month" onChange={handleChange} name="rent" type="number" fullWidth value={rent} InputLabelProps={{ shrink: true }} InputProps={{startAdornment: <InputAdornment position="start">$</InputAdornment>}}/>
-                        <TextField label="Max Capacity" onChange={handleChange} name="capacity" type="number" fullWidth value={capacity} InputLabelProps={{ shrink: true }}/>
-                        <TextField label="Bath" onChange={handleChange} name="bath" type="number" fullWidth value={bath} InputLabelProps={{shrink: true}}/>
-                        <TextField label="Bedrooms" onChange={handleChange} name="bed" type="number" fullWidth value={bed} InputLabelProps={{shrink: true}}/>
+                        <TextField required label="Property Built" onChange={handleChange} name="built" type="date" fullWidth value={built} InputLabelProps={{ shrink: true }}/>
+                        <TextField required label="Square Feet" type="number" onChange={handleChange} name="squareFeet" fullWidth value={squareFeet} InputLabelProps={{ shrink: true }}/>
+                        <TextField required label="Rent Per Month" onChange={handleChange} name="rent" type="number" fullWidth value={rent} InputLabelProps={{ shrink: true }} InputProps={{startAdornment: <InputAdornment position="start">$</InputAdornment>}}/>
+                        <TextField required label="Max Capacity" onChange={handleChange} name="capacity" type="number" fullWidth value={capacity} InputLabelProps={{ shrink: true }}/>
+                        <TextField required label="Bath" onChange={handleChange} name="bath" type="number" fullWidth value={bath} InputLabelProps={{shrink: true}}/>
+                        <TextField required label="Bedrooms" onChange={handleChange} name="bed" type="number" fullWidth value={bed} InputLabelProps={{shrink: true}}/>
                     </Stack>
                     <Typography variant="h6" component="h2" sx={{mt: 1}}>
                         Features
                     </Typography>
                     <Divider/>
                     <Stack direction="row" spacing={3} sx={{mt: 2}}>
-                        <TextField label="Parking Stalls" type="number" onChange={handleChange} name="parkingStalls" fullWidth value={parkingStalls} InputLabelProps={{shrink: true}}/>
+                        <TextField required label="Parking Stalls" type="number" onChange={handleChange} name="parkingStalls" fullWidth value={parkingStalls} InputLabelProps={{shrink: true}}/>
                         <TextField fullWidth id="select" label="Pets" value={pets} onChange={handlePetsChange} select required InputLabelProps={{ shrink: true }}>
                             <MenuItem value={"true"}>Allowed</MenuItem>
                             <MenuItem value={"false"}>Not Allowed</MenuItem>
@@ -207,7 +205,7 @@ const EditProperty = () => {
                     </Typography>
                     <Divider/>
                     <AmenitiesAutoComplete value={amenities} setAmenities={setAmenities}/>
-                    <TextField rows={8} fullWidth multiline onChange={handleChange} name="description" value={description} placeholder="Brief description of your property (optional)"/>
+                    <TextField label="Property Description" rows={8} fullWidth multiline onChange={handleChange} name="description" value={description} placeholder="Brief description of your property (optional)" InputLabelProps={{ shrink: true }}/>
                     <FormControlLabel style={btnStyle} label="Post this property on our website so others can find it" control={<Checkbox checked={post} onChange={handlePost} inputProps={{ "aria-label": "controlled" }}/>}/>
                     <br/>
                     <Button variant="contained" style={btnStyle} endIcon={<FileUpload/>} component="label">
@@ -218,10 +216,9 @@ const EditProperty = () => {
                     </Button>
                     <ListImage
                         selectedFiles={selectedFiles}
-                        selectedFilesArray={selectedFilesArray}
                         setSelectedFiles={setSelectedFiles}
-                        setSelectedFilesArray={setSelectedFilesArray}
-                        setIndexToDelete={setIndexToDelete}
+                        imagesToDelete={imagesToDelete}
+                        setImagesToDelete={setImagesToDelete}
                     />
                     <Button type="submit" color="primary" variant="contained" style={btnStyle} fullWidth>
                         <Typography fontFamily="Noto Sans">Submit</Typography>

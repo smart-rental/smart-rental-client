@@ -26,19 +26,23 @@ const AddIssue = () => {
 
     const [{ issueType, issueDescription }, setValues] = useState(initialState);
     const [selectedFiles, setSelectedFiles] = useState([]);
-    const [selectedFilesArray, setSelectedFilesArray] = useState([]);
     const [loading, setLoading] = useState(false);
     const imageInputRef = useRef();
 
     const handleFileChange = (event) => {
-        const selectedFiles = event.target.files;
-        const selectedFilesArray = Array.from(selectedFiles);
-        const imageArray = selectedFilesArray.map((image) => {
-            return URL.createObjectURL(image);
-        });
-        setSelectedFilesArray(prevState => prevState.concat(selectedFilesArray));
-        setSelectedFiles(prevState => prevState.concat(imageArray));
+        const filesGiven = event.target.files;
+        for (const file of filesGiven) {
+            previewFile(file);
+        }
     };
+
+    const previewFile = (file) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onloadend = () => {
+            setSelectedFiles(prev => [...prev, reader.result]);
+        }
+    }
 
     const handleChange = (event) => {
         const { name, value } = event.target;
@@ -47,7 +51,6 @@ const AddIssue = () => {
 
     const reset = () => {
         setValues(initialState);
-        setSelectedFilesArray([]);
         setSelectedFiles([]);
         imageInputRef.current.value = "";
     };
@@ -68,12 +71,11 @@ const AddIssue = () => {
     const createIssue = (e) => {
         e.preventDefault();
         setLoading(true);
-        const issueData = new FormData();
-        for (const image of selectedFilesArray) {
-            issueData.append("issueImage", image);
-        }
-        issueData.append("issueType", issueType);
-        issueData.append("issueDescription", issueDescription);
+        const issueData = {
+            issueImage: selectedFiles,
+            issueDescription,
+            issueType
+        };
         addIssue(isLoggedIn, issueData)
             .then(() => {
                 setLoading(false);
@@ -81,11 +83,11 @@ const AddIssue = () => {
                 reset();
             })
             .catch((e) => {
+                setLoading(false);
                 if (e.response) {
                     if (e.response.status === 404) {
                         Swal.fire("Error", "You have not been added to a property. <br/> If this is a mistake please contact your landlord to add you to their list of properties", "error");
                     } else {
-                        console.log(e);
                         Swal.fire("Error", "There was an issue adding your issue", "error");
                     }
                 }
@@ -143,9 +145,7 @@ const AddIssue = () => {
                 </Button>
                 <ListImage
                     selectedFiles={selectedFiles}
-                    selectedFilesArray={selectedFilesArray}
                     setSelectedFiles={setSelectedFiles}
-                    setSelectedFilesArray={setSelectedFilesArray}
                 />
                 <br/>
                 <Button type="submit" color="primary" variant="contained" fullWidth>

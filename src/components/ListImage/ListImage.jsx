@@ -5,10 +5,9 @@ import IconButton from "@mui/material/IconButton";
 
 const ListImage = ({
                        selectedFiles,
-                       selectedFilesArray,
                        setSelectedFiles,
-                       setSelectedFilesArray,
-                       setIndexToDelete,
+                       imagesToDelete, 
+                       setImagesToDelete,
                        width,
                        height
                    }) => {
@@ -16,8 +15,8 @@ const ListImage = ({
     const [objToDelete, setObjToDelete] = useState();
 
     function setTheObjToDelete(index) {
-        if (setIndexToDelete !== undefined) {
-            setObjToDelete(setIndexToDelete(prevState => [...prevState, selectedFilesArray[index]]));
+        if (setImagesToDelete !== undefined) {
+            setObjToDelete(setImagesToDelete(prevState => [...prevState, selectedFiles[index]]));
         }
     }
 
@@ -29,7 +28,7 @@ const ListImage = ({
                         return (
                             <ImageListItem key={index}>
                                 <img
-                                    src={image}
+                                    src={typeof image === "string" ? image : image.secure_url}
                                     alt="black"
                                     loading="lazy"
                                 />
@@ -45,7 +44,6 @@ const ListImage = ({
                                             sx={{ color: "white" }}
                                             onClick={() => {
                                                 setSelectedFiles(selectedFiles.filter(e => e !== image));
-                                                setSelectedFilesArray(selectedFilesArray.filter((e, ind) => ind !== index));
                                                 setTheObjToDelete(index);
                                             }}
                                         >

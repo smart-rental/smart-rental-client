@@ -35,7 +35,6 @@ const AddProperty = () => {
     const [post, setPost] = useState(false);
     const [amenities, setAmenities] = useState([]);
     const [selectedFiles, setSelectedFiles] = useState([]);
-    const [selectedFilesArray, setSelectedFilesArray] = useState([]);
     const [loading, setLoading] = useState(false);
     const [{
         location,
@@ -62,14 +61,19 @@ const AddProperty = () => {
     };
 
     const handleFileChange = (event) => {
-        const selectedFiles = event.target.files;
-        const selectedFilesArray = Array.from(selectedFiles);
-        const imageArray = selectedFilesArray.map((image) => {
-            return URL.createObjectURL(image);
-        });
-        setSelectedFilesArray(prevState => prevState.concat(selectedFilesArray));
-        setSelectedFiles(prevState => prevState.concat(imageArray));
+        const filesGiven = event.target.files;
+        for (const file of filesGiven) {
+            previewFile(file);
+        }
     };
+    
+    const previewFile = (file) => { 
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onloadend = () => { 
+            setSelectedFiles(prev => [...prev, reader.result]);
+        }
+    }
 
     const handleChange = (event) => {
         let { name, value } = event.target;
@@ -92,7 +96,6 @@ const AddProperty = () => {
         setPets("");
         setUtilities("");
         setPost(false);
-        setSelectedFilesArray([]);
         setSelectedFiles([]);
         setAmenities([]);
         setValues({ ...initialState });
@@ -114,33 +117,34 @@ const AddProperty = () => {
     const createProperty = (e) => {
         e.preventDefault();
         setLoading(true);
-        const propertyData = new FormData();
-        for (const image of selectedFilesArray) {
-            propertyData.append("images", image);
+        const amentieArray = [];
+        for (const amenity of amenities) {
+            amentieArray.push(amenity.amenities);
         }
-        for (const amenity of amenities) { 
-            propertyData.append("amenities", amenity.amenities);
-        }
-        propertyData.append("location", location);
-        propertyData.append("built", built.toString());
-        propertyData.append("squareFeet", squareFeet);
-        propertyData.append("rent", rent);
-        propertyData.append("capacity", capacity);
-        propertyData.append("parkingStalls", parkingStalls);
-        propertyData.append("pets", pets);
-        propertyData.append("utilities", utilities);
-        propertyData.append("bed", bed);
-        propertyData.append("bath", bath);
-        propertyData.append("post", post);
-        propertyData.append("description", description);
-        propertyData.append("ownerId", id);
+        const propertyData = { 
+            images: selectedFiles,
+            amenities: amentieArray,
+            location, 
+            built,
+            squareFeet,
+            rent,
+            capacity,
+            parkingStalls,
+            pets,
+            utilities,
+            bed,
+            bath,
+            post,
+            description,
+            ownerId: id
+        };
         addProperty(id, propertyData)
             .then(() => {
                 setLoading(false);
                 Swal.fire("Congratulations", "Your property has been added", "success").then(reset);
             })
             .catch((e) => {
-                console.log(e);
+                setLoading(false);
                 Swal.fire("Try Again", "Your property has not been added", "error");
             });
     };
@@ -159,19 +163,19 @@ const AddProperty = () => {
                 <Divider/>
                 <PlacesAutoComplete name="location" label="Property Location" handleChange={setValues} style={btnStyle} valueProp={location}/>
                 <Stack direction="row" spacing={3} sx={{mt: 2}}>
-                    <TextField label="Property Built" onChange={handleChange} name="built" type="date" fullWidth value={built} InputLabelProps={{ shrink: true }}/>
-                    <TextField label="Square Feet" type="number" onChange={handleChange} name="squareFeet" fullWidth value={squareFeet} InputLabelProps={{ shrink: true }}/>
-                    <TextField label="Rent Per Month" onChange={handleChange} name="rent" type="number" fullWidth value={rent} InputLabelProps={{ shrink: true }} InputProps={{startAdornment: <InputAdornment position="start">$</InputAdornment>}}/>
-                    <TextField label="Max Capacity" onChange={handleChange} name="capacity" type="number" fullWidth value={capacity} InputLabelProps={{ shrink: true }}/>
-                    <TextField label="Bath" onChange={handleChange} name="bath" type="number" fullWidth value={bath} InputLabelProps={{shrink: true}}/>
-                    <TextField label="Bedrooms" onChange={handleChange} name="bed" type="number" fullWidth value={bed} InputLabelProps={{shrink: true}}/>
+                    <TextField required label="Property Built" onChange={handleChange} name="built" type="date" fullWidth value={built} InputLabelProps={{ shrink: true }}/>
+                    <TextField required label="Square Feet" type="number" onChange={handleChange} name="squareFeet" fullWidth value={squareFeet} InputLabelProps={{ shrink: true }}/>
+                    <TextField required label="Rent Per Month" onChange={handleChange} name="rent" type="number" fullWidth value={rent} InputLabelProps={{ shrink: true }} InputProps={{startAdornment: <InputAdornment position="start">$</InputAdornment>}}/>
+                    <TextField required label="Max Capacity" onChange={handleChange} name="capacity" type="number" fullWidth value={capacity} InputLabelProps={{ shrink: true }}/>
+                    <TextField required label="Bath" onChange={handleChange} name="bath" type="number" fullWidth value={bath} InputLabelProps={{shrink: true}}/>
+                    <TextField required label="Bedrooms" onChange={handleChange} name="bed" type="number" fullWidth value={bed} InputLabelProps={{shrink: true}}/>
                 </Stack>
                 <Typography variant="h6" component="h2" sx={{mt: 1}}>
                     Features
                 </Typography>
                 <Divider/>
                 <Stack direction="row" spacing={3} sx={{mt: 2}}>
-                    <TextField label="Parking Stalls" type="number" onChange={handleChange} name="parkingStalls" fullWidth value={parkingStalls} InputLabelProps={{shrink: true}}/>
+                    <TextField required label="Parking Stalls" type="number" onChange={handleChange} name="parkingStalls" fullWidth value={parkingStalls} InputLabelProps={{shrink: true}}/>
                     <TextField fullWidth id="select" label="Pets" value={pets} onChange={handlePetsChange} select required InputLabelProps={{ shrink: true }}>
                         <MenuItem value={"true"}>Allowed</MenuItem>
                         <MenuItem value={"false"}>Not Allowed</MenuItem>
@@ -188,7 +192,7 @@ const AddProperty = () => {
                 </Typography>
                 <Divider/>
                 <AmenitiesAutoComplete value={amenities} setAmenities={setAmenities}/>
-                <TextField rows={8} fullWidth multiline onChange={handleChange} name="description" value={description} placeholder="Brief description of your property (optional)"/>
+                <TextField label="Property Description" rows={8} fullWidth multiline onChange={handleChange} name="description" value={description} placeholder="Brief description of your property (optional)" InputLabelProps={{ shrink: true }}/>
                 <FormControlLabel style={btnStyle} label="Post this property on our website so others can find it" control={<Checkbox checked={post} onChange={handlePost} inputProps={{ "aria-label": "controlled" }}/>}/>
                 <br/>
                 <Button variant="contained" style={btnStyle} endIcon={<FileUpload/>} component="label">
@@ -197,7 +201,7 @@ const AddProperty = () => {
                     </Typography>
                     <input onChange={handleFileChange} hidden multiple type="file"/>
                 </Button>
-                <ListImage selectedFiles={selectedFiles} selectedFilesArray={selectedFilesArray} setSelectedFiles={setSelectedFiles} setSelectedFilesArray={setSelectedFilesArray}/>
+                <ListImage selectedFiles={selectedFiles} setSelectedFiles={setSelectedFiles}/>
                 <br/>
                 <Button type="submit" color="primary" variant="contained" style={btnStyle} fullWidth>
                     <Typography fontFamily="Noto Sans">Submit</Typography>

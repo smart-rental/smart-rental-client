@@ -101,31 +101,33 @@ const EasyApplyModal = ({ handleClose, open }) => {
                     </Typography>
                     <Divider orientation="horizontal"/>
                     <Stack direction="row" spacing={1} sx={{mt: 2}}>
-                        <TextField name="firstName" value={firstName} onChange={handleChange} fullWidth InputLabelProps={{ shrink: true }} label="First Name"/>
-                        <TextField name="lastName" value={lastName} onChange={handleChange} fullWidth InputLabelProps={{ shrink: true }} label="Last Name"/>
-                        <TextField name="dob" value={dob} onChange={handleChange} fullWidth InputLabelProps={{ shrink: true }} label="DOB" type="date"/>
+                        <TextField required name="firstName" value={firstName} onChange={handleChange} fullWidth InputLabelProps={{ shrink: true }} label="First Name"/>
+                        <TextField required name="lastName" value={lastName} onChange={handleChange} fullWidth InputLabelProps={{ shrink: true }} label="Last Name"/>
+                        <TextField required name="dob" value={dob} onChange={handleChange} fullWidth InputLabelProps={{ shrink: true }} label="DOB" type="date"/>
                     </Stack>
                     <Stack direction="row" spacing={1} sx={{mt: 2}}>
-                        <TextField name="email" value={email} onChange={handleChange} fullWidth InputLabelProps={{ shrink: true }} label="Email" type="email"/>
+                        <TextField required name="email" value={email} onChange={handleChange} fullWidth InputLabelProps={{ shrink: true }} label="Email" type="email"/>
                         <PhoneInput
                             country={'us'}
                             style={{width: 400}}
                             value={phoneNumber}
                             disableDropdown
                             onlyCountries={['us']}
+                            required
                             onChange={phone => setApplication((prevState) => ({...prevState, ["phoneNumber"]: phone}))}
-                        />                    </Stack>
+                        />                    
+                    </Stack>
                     <Typography variant="h6" component="h2" sx={{mt: 2}}>
                         Personal Information
                     </Typography>
                     <Divider orientation="horizontal"/>
                     <Stack direction="row" spacing={1} sx={{mt: 2}}>
-                        <TextField name="occupation" value={occupation} onChange={handleChange} fullWidth InputLabelProps={{ shrink: true }} label="Occupation"/>
-                        <TextField name="monthlyIncome" value={monthlyIncome} onChange={handleChange} fullWidth InputLabelProps={{ shrink: true }} type="number" label="Monthly Income" InputProps={{startAdornment: <InputAdornment position="start">$</InputAdornment>}}/>
+                        <TextField required name="occupation" value={occupation} onChange={handleChange} fullWidth InputLabelProps={{ shrink: true }} label="Occupation"/>
+                        <TextField required name="monthlyIncome" value={monthlyIncome} onChange={handleChange} fullWidth InputLabelProps={{ shrink: true }} type="number" label="Monthly Income" InputProps={{startAdornment: <InputAdornment position="start">$</InputAdornment>}}/>
                     </Stack>
-                    <TextField name="animals" value={animals} onChange={handleChange} fullWidth InputLabelProps={{ shrink: true }} type="number" label="Number of Animals" sx={{ mt: 2 }}/>
-                    <TextField name="vehicles" value={vehicles} onChange={handleChange} fullWidth InputLabelProps={{ shrink: true }} type="number" label="Number of Vehicles" sx={{ mt: 2 }}/>
-                    <TextField name="occupants" value={occupants} onChange={handleChange} fullWidth InputLabelProps={{ shrink: true }} type="number" label="Number of occupants" sx={{ mt: 2 }}/>
+                    <TextField required name="animals" value={animals} onChange={handleChange} fullWidth InputLabelProps={{ shrink: true }} type="number" label="Number of Animals" sx={{ mt: 2 }}/>
+                    <TextField required name="vehicles" value={vehicles} onChange={handleChange} fullWidth InputLabelProps={{ shrink: true }} type="number" label="Number of Vehicles" sx={{ mt: 2 }}/>
+                    <TextField required name="occupants" value={occupants} onChange={handleChange} fullWidth InputLabelProps={{ shrink: true }} type="number" label="Number of occupants" sx={{ mt: 2 }}/>
                     <Typography variant="h6" component="h2" sx={{mt: 1}}>
                         Additional Information
                     </Typography>
