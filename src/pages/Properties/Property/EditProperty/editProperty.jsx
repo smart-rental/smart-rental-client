@@ -18,13 +18,14 @@ import ListImage from "../../../../components/ListImage/ListImage";
 import { FileUpload } from "@mui/icons-material";
 import Container from "@mui/material/Container";
 import AmenitiesAutoComplete from "../../../../components/AmenitiesAutoComplete/AmenitiesAutoComplete";
+import YearPicker from "../../../../components/YearPicker/YearPicker";
 
 const EditProperty = () => {
     let { ownerId, propertyId } = useParams();
     const navigate = useNavigate();
     const initialState = {
         location: "",
-        built: new Date(),
+        built: "",
         squareFeet: "",
         rent: "",
         capacity: "",
@@ -47,7 +48,7 @@ const EditProperty = () => {
             const { location, built, squareFeet, images, rent, capacity, parkingStalls, pets, utilities, bed, bath, post, description, amenities } = res.data;
             setValues({
                 location,
-                built,
+                built: { year: built },
                 squareFeet,
                 rent,
                 capacity,
@@ -136,7 +137,7 @@ const EditProperty = () => {
             amenities: amentieArray,
             imagesToDelete,
             location,
-            built,
+            built: built.year,
             squareFeet,
             rent,
             capacity,
@@ -176,7 +177,7 @@ const EditProperty = () => {
                     <Divider/>
                     <PlacesAutoComplete name="location" label="Property Location" handleChange={setValues} style={btnStyle} valueProp={location}/>
                     <Stack direction="row" spacing={3} sx={{mt: 2}}>
-                        <TextField required label="Property Built" onChange={handleChange} name="built" type="date" fullWidth value={built} InputLabelProps={{ shrink: true }}/>
+                        <YearPicker value={built} name="built" setYearBuilt={setValues}/>
                         <TextField required label="Square Feet" type="number" onChange={handleChange} name="squareFeet" fullWidth value={squareFeet} InputLabelProps={{ shrink: true }}/>
                         <TextField required label="Rent Per Month" onChange={handleChange} name="rent" type="number" fullWidth value={rent} InputLabelProps={{ shrink: true }} InputProps={{startAdornment: <InputAdornment position="start">$</InputAdornment>}}/>
                         <TextField required label="Max Capacity" onChange={handleChange} name="capacity" type="number" fullWidth value={capacity} InputLabelProps={{ shrink: true }}/>

@@ -75,13 +75,7 @@ const HouseCardMap = () => {
     const petToString = () => {
         return pets ? "Allowed" : "Not Allowed";
     };
-    const dateToString = () => {
-        const date = new Date(built);
-        const day = date.getUTCDate();
-        const month = date.getUTCMonth() + 1;
-        const year = date.getUTCFullYear();
-        return `${month}/${day}/${year}`;
-    };
+    
     useEffect(() => {
         let isMounted = true;
         async function retrieveData() {
@@ -162,7 +156,7 @@ const HouseCardMap = () => {
                     <ListItemIcon>
                         <BuildIcon/>
                     </ListItemIcon>
-                    <ListItemText primary={`Built: ${dateToString()}`} sx={{ m: -3 }}
+                    <ListItemText primary={`Built: ${built}`} sx={{ m: -3 }}
                                   primaryTypographyProps={{ fontSize: 18, fontWeight: "medium" }}/>
                 </ListItem>
                 <ListItem>

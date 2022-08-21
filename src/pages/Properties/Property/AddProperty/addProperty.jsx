@@ -16,12 +16,13 @@ import Container from "@mui/material/Container";
 import ListImage from "../../../../components/ListImage/ListImage";
 import { FileUpload } from "@mui/icons-material";
 import AmenitiesAutoComplete from "../../../../components/AmenitiesAutoComplete/AmenitiesAutoComplete";
+import YearPicker from "../../../../components/YearPicker/YearPicker";
 
 const AddProperty = () => {
     let { id } = useParams();
     const initialState = {
         location: "",
-        built: new Date(),
+        built: "",
         squareFeet: "",
         rent: "",
         capacity: "",
@@ -125,7 +126,7 @@ const AddProperty = () => {
             images: selectedFiles,
             amenities: amentieArray,
             location, 
-            built,
+            built: built.year,
             squareFeet,
             rent,
             capacity,
@@ -163,7 +164,7 @@ const AddProperty = () => {
                 <Divider/>
                 <PlacesAutoComplete name="location" label="Property Location" handleChange={setValues} style={btnStyle} valueProp={location}/>
                 <Stack direction="row" spacing={3} sx={{mt: 2}}>
-                    <TextField required label="Property Built" onChange={handleChange} name="built" type="date" fullWidth value={built} InputLabelProps={{ shrink: true }}/>
+                    <YearPicker value={built} name="built" setYearBuilt={setValues}/>
                     <TextField required label="Square Feet" type="number" onChange={handleChange} name="squareFeet" fullWidth value={squareFeet} InputLabelProps={{ shrink: true }}/>
                     <TextField required label="Rent Per Month" onChange={handleChange} name="rent" type="number" fullWidth value={rent} InputLabelProps={{ shrink: true }} InputProps={{startAdornment: <InputAdornment position="start">$</InputAdornment>}}/>
                     <TextField required label="Max Capacity" onChange={handleChange} name="capacity" type="number" fullWidth value={capacity} InputLabelProps={{ shrink: true }}/>
