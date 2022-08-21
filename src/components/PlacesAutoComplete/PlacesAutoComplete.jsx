@@ -2,8 +2,10 @@ import React, { useEffect } from "react";
 import usePlacesAutocomplete from "use-places-autocomplete";
 import useOnclickOutside from "react-cool-onclickoutside";
 import { Autocomplete, TextField } from "@mui/material";
+import { useLoadScript } from "@react-google-maps/api";
 
 
+const libraries = ['places'];
 
 const PlacesAutoComplete = ({ name, label, style, valueProp, handleChange }) => {
     const {
@@ -13,9 +15,14 @@ const PlacesAutoComplete = ({ name, label, style, valueProp, handleChange }) => 
         clearSuggestions
     } = usePlacesAutocomplete();
 
+    useLoadScript({
+        googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
+        libraries
+    });
+    
     useEffect(() => { 
         setValue(valueProp);
-    }, [valueProp, setValue])
+    }, [valueProp])
     const ref = useOnclickOutside(() => {
         // When user clicks outside the component, we can dismiss
         // the searched suggestions by calling this method

@@ -17,7 +17,6 @@ const AmenitiesAutoComplete = ({value, setAmenities}) => {
         { amenities: "Pool" },
     ]
 
-
     return (
         <Autocomplete
             multiple

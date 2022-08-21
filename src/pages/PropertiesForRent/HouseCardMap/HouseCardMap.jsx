@@ -88,8 +88,10 @@ const HouseCardMap = () => {
             const property = await getPropertyByID(propertyId);
             setProperty(property.data);
             const user = await getUser(ownerId);
-            const { name, phoneNumber, email } = user.data;
-            setLandlord({ landlordName: name, phoneNumber, email });
+            if (user) {
+                const { name, phoneNumber, email } = user.data;
+                setLandlord({ landlordName: name, phoneNumber, email });
+            }
         }
 
         retrieveData();
@@ -189,7 +191,7 @@ const HouseCardMap = () => {
             <Typography variant="h6" component="h2" sx={{ mt: 2 }}>
                 Features
             </Typography>
-            <List component={Stack} direction="row" spacing={17} alignItems="center" justifyConten="center">
+            <List component={Stack} direction="row" spacing={17} alignItems="center" justifyContent="center">
                 <ListItem>
                     <ListItemIcon>
                         <PetsIcon/>
@@ -217,8 +219,8 @@ const HouseCardMap = () => {
                 Amenities
             </Typography>
             <ul style={{ marginTop: 0 }}>
-                {amenities.map((amenity) => (
-                    <li>
+                {amenities.map((amenity, index) => (
+                    <li key={index}>
                         <Typography sx={{ fontSize: 18, fontWeight: "medium" }}>
                             {amenity}
                         </Typography>

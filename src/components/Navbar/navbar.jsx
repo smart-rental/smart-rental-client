@@ -127,7 +127,7 @@ const ResponsiveAppBar = () => {
                             style={classes.menu}
                         >
                             {userType == null && 
-                                <>
+                                <div>
                                     <MenuItem>
                                         <Typography textAlign="center"><Link style={classes.menuItem} to="/">Home Page</Link></Typography>
                                     </MenuItem>
@@ -135,10 +135,10 @@ const ResponsiveAppBar = () => {
                                         <Typography textAlign="center"><Link style={classes.menuItem} to="/house">View Available
                                             Houses</Link></Typography>
                                     </MenuItem>
-                                </>
+                                </div>
                             }
                             {userType === LANDLORD &&
-                                <>
+                                <div>
                                     <MenuItem>
                                         <Typography textAlign="center"><Link style={classes.menuItem} to={`/landlord/${isLoggedIn}`}>Manage Properties</Link></Typography>
                                     </MenuItem>
@@ -148,9 +148,9 @@ const ResponsiveAppBar = () => {
                                     <MenuItem>
                                         <Typography textAlign="center"><Link style={classes.menuItem} to={`/profile/${isLoggedIn}`}>Profile</Link></Typography>
                                     </MenuItem>
-                                </>}
+                                </div>}
                             {userType === TENANT && 
-                                <>
+                                <div>
                                     <MenuItem>
                                         <Typography textAlign="center"><Link style={classes.menuItem} to="/house">View Available Houses</Link></Typography>
                                     </MenuItem>
@@ -160,7 +160,7 @@ const ResponsiveAppBar = () => {
                                     <MenuItem>
                                         <Typography textAlign="center"><Link style={classes.menuItem} to="/house">View Available Houses</Link></Typography>
                                     </MenuItem>
-                                </>
+                                </div>
                             }
                         </Menu>
                     </Box>

@@ -136,6 +136,9 @@ const EditProperty = () => {
         for (const image of selectedFilesArray) {
             propertyData.append("images", image);
         }
+        for (const amenity of amenities) {
+            propertyData.append("amenities", amenity.amenities);
+        }
         propertyData.append("location", location);
         propertyData.append("built", built.toString());
         propertyData.append("squareFeet", squareFeet);
@@ -203,7 +206,7 @@ const EditProperty = () => {
                         Amenities
                     </Typography>
                     <Divider/>
-                    <AmenitiesAutoComplete value={amenities} handleAmenities={setAmenities}/>
+                    <AmenitiesAutoComplete value={amenities} setAmenities={setAmenities}/>
                     <TextField rows={8} fullWidth multiline onChange={handleChange} name="description" value={description} placeholder="Brief description of your property (optional)"/>
                     <FormControlLabel style={btnStyle} label="Post this property on our website so others can find it" control={<Checkbox checked={post} onChange={handlePost} inputProps={{ "aria-label": "controlled" }}/>}/>
                     <br/>

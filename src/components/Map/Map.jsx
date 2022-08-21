@@ -14,7 +14,8 @@ const Map = () => {
     useEffect(() => {
         getGeocode(propertyLocation)
             .then((res) => {
-                setGeoCodeData(res.data.results[0].geometry.location);
+                const data = res.data.results[0].geometry.location;
+                setGeoCodeData(data);
             })
             .catch((e) => {
                 console.log(e);

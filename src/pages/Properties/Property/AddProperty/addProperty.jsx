@@ -144,7 +144,7 @@ const AddProperty = () => {
                 Swal.fire("Try Again", "Your property has not been added", "error");
             });
     };
-
+    
     return (
         <form onSubmit={createProperty}>
             {backdrop()}
