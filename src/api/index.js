@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const url = "http://localhost:5000";
+const url = process.env.REACT_APP_API_URL;
 const googleAPIUrl = 'https://maps.googleapis.com/maps/api/geocode/json'
 
 // User
