@@ -213,13 +213,13 @@ const HouseCardMap = () => {
                 Amenities
             </Typography>
             <ul style={{ marginTop: 0 }}>
-                {amenities.map((amenity, index) => (
+                {amenities.length > 0 ? amenities.map((amenity, index) => (
                     <li key={index}>
                         <Typography sx={{ fontSize: 18, fontWeight: "medium" }}>
                             {amenity}
                         </Typography>
                     </li>
-                ))}
+                )) : "None"}
             </ul>
             <Divider/>
             <Typography variant="h6" component="h2" sx={{ mt: 2, mb: 1 }}>
