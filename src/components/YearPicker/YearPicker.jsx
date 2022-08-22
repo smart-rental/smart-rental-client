@@ -16,6 +16,7 @@ const YearPicker = ({ value, setYearBuilt, name}) => {
             <Autocomplete 
                 options={options}
                 disableCloseOnSelect
+                disableClearable
                 autoHighlight
                 getOptionLabel={(option) => option.year || ""}
                 filterSelectedOptions

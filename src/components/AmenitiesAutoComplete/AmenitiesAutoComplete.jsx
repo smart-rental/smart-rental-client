@@ -8,13 +8,14 @@ const AmenitiesAutoComplete = ({value, setAmenities}) => {
         { amenities: "Washer" },
         { amenities: "Dryer" },
         { amenities: "Air Conditioning" },
-        { amenities: "Hardwood Floors" },
         { amenities: "Dishwasher" },
         { amenities: "Fireplace" },
         { amenities: "WiFi" },
         { amenities: "TV" },
         { amenities: "Heating System" },
         { amenities: "Pool" },
+        { amenities: "Fitness Center" },
+        { amenities: "Garage" },
     ]
 
     return (
