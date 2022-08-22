@@ -3,7 +3,7 @@ import { Autocomplete, TextField } from "@mui/material";
 
 const options = [];
 const date = new Date();
-for (let i = 1990; i <= date.getFullYear(); i++) { 
+for (let i = 1800; i <= date.getFullYear(); i++) { 
     options.push({
         year: i.toString()
     })
@@ -11,7 +11,6 @@ for (let i = 1990; i <= date.getFullYear(); i++) {
 
 const YearPicker = ({ value, setYearBuilt, name}) => {
     const [inputValue, setInputValue] = useState("");
-    console.log(value);
     return (
         <div>
             <Autocomplete 
